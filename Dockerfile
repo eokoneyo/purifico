@@ -5,13 +5,24 @@ FROM ubuntu:trusty
 ENV TERM xterm
 
 #update apt repositories and install lldb, perf and other dependencies
+## uncomment lldb 3.9 if you're into that sort of thing. Remove the RUN that installs 4.0
+## and update references of "4.0" to "3.9"
 RUN apt-get update && apt-get install -y build-essential \
     git \
-    ldb-3.8 \
-    lldb-3.8-dev \
+    #ldb-3.9 \
+    #liblldb-3.9-dev \
     python-pip \
+	software-properties-common \
+	wget \
     linux-tools-common \
     linux-tools-generic
+
+# install lldb 4.0
+RUN wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add - &&\
+	apt-add-repository "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main" &&\
+	apt-get update &&\
+	apt-get install -y lldb-4.0
+
 
 RUN pip install six
 
@@ -26,11 +37,14 @@ RUN git clone https://github.com/nodejs/llnode.git
 RUN cd llnode
 WORKDIR /tmp/llnode
 
+# locking down a known, working llnode commit
+RUN git reset 9014fd4af9cd2f6a89881adc6398496ce54d4e9c --hard
+
 #clone gyp tool into directory
 RUN git clone https://chromium.googlesource.com/external/gyp.git tools/gyp
 
 # Configure
-RUN ./gyp_llnode -Dlldb_dir=/usr/lib/llvm-3.8/
+RUN ./gyp_llnode -Dlldb_dir=/usr/lib/llvm-4.0/
 
 # Build
 RUN make -C out/ -j9
@@ -38,8 +52,8 @@ RUN make -C out/ -j9
 # Install
 RUN make install-linux
 
-#make lldb-3.8 available in bash also as lldb
-RUN echo "alias lldb='lldb-3.8'" >> ~/.bash_aliases
+#make lldb-4.0 available in bash also as lldb
+RUN echo "alias lldb='lldb-4.0'" >> ~/.bash_aliases
 
 # Creating base "src" directory where the source repo will reside in our container.
 # Code is copied from the host machine to this "src" folder in the container as a last step.
