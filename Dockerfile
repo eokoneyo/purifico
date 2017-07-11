@@ -38,7 +38,7 @@ RUN cd llnode
 WORKDIR /tmp/llnode
 
 # locking down a known, working llnode commit
-RUN git reset 9014fd4af9cd2f6a89881adc6398496ce54d4e9c --hard
+RUN git reset ed6283bb46f4a7624a00eb95986c34328fc2370c --hard
 
 #clone gyp tool into directory
 RUN git clone https://chromium.googlesource.com/external/gyp.git tools/gyp
