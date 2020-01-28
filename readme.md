@@ -10,10 +10,10 @@ This project is heavily inspired by the works of [Howard Hellyer](https://github
 
 - Start the container
     ```bash
-bin/start_disposable.sh
+      ./bin/start_disposable.sh
     ```
 
-- To use `findjsobjects` and other similar commands, a memory ranges file must be generated. Simply run `./set_memoryranges.sh` and follow the prompt.
+- To use `findjsobjects` and other similar commands, a memory ranges file must be generated. Simply run `./set_memoryranges.sh` within the container and follow the prompt.
 
 ### Reading Material
 
